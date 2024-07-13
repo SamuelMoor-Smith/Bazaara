@@ -1,4 +1,6 @@
 import { CCIP_LOCAL_SIMULATOR_ABI } from "~~/abis/CCIPLocalSimulator";
+import { CCIP_RECEIVER_UNSAFE_ABI } from "~~/abis/CCIPReceiver_Unsafe";
+import { CCIP_SENDER_UNSAFE_ABI } from "~~/abis/CCIPSender_Unsafe";
 import { CROSS_CHAIN_NFT_ABI } from "~~/abis/CrossChainNFT";
 import { CROSS_DESTINATION_MINTER_ABI } from "~~/abis/CrossDestinationMinter";
 import { CROSS_SOURCE_MINTER_ABI } from "~~/abis/CrossSourceMinter";
@@ -32,6 +34,14 @@ const externalContracts = {
     CrossSourceMinter: {
       address: "0x36b9D492ED6679FDC48408Ed11a65dC5677E0eF4",
       abi: CROSS_SOURCE_MINTER_ABI as any,
+    },
+    CCIPSender_Unsafe: {
+      address: "0xdEF7b5Ef6369848bc9Cc89B793C4B2197D4c4855",
+      abi: CCIP_SENDER_UNSAFE_ABI as any,
+    },
+    CCIPReceiver_Unsafe: {
+      address: "0xd84e040FAE5E20Ddb3ee17Fd05e0CFCa76C78852",
+      abi: CCIP_RECEIVER_UNSAFE_ABI as any,
     },
   },
 } as const;
