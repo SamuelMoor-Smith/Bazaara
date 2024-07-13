@@ -2,6 +2,14 @@
 pragma solidity ^0.8.19;
 
 contract OrderHouse {
+    // Define a condition for matching
+    struct Condition {
+        uint256 bidParameterIndex;
+        uint256 askParameterIndex;
+        string relationship; // Relationship for comparison (e.g., ">", ">=", "=", "<=", "<")
+        string valueType; // Type of value to compare ("uint" or "string")
+    }
+
     // Define an Order Type
     struct OrderType {
         uint256 id;
@@ -9,9 +17,7 @@ contract OrderHouse {
         string functionSignature;
         string[5] supplierParameterKeys;
         string[5] bidderParameterKeys;
-        uint256 bidParameterIndex;  // Index of the bid parameter to compare
-        uint256 askParameterIndex;  // Index of the ask parameter to compare
-        string relationship;        // Relationship for comparison (e.g., ">", ">=", "=", "<=", "<")
+        Condition[5] conditions; // Array of up to 5 conditions for matching
     }
 
     // Define an Order
@@ -39,15 +45,16 @@ contract OrderHouse {
         nextOrderId = 1;
     }
 
-    // Create a new Order Type with function signature
+    // Create a new Order Type with function signature and conditions
     function createOrderType(
         string memory name,
         string memory functionSignature,
         string[5] memory supplierParameters,
         string[5] memory bidderParameters,
-        uint256 bidParameterIndex,
-        uint256 askParameterIndex,
-        string memory relationship
+        uint256[5] memory bidParameterIndices,
+        uint256[5] memory askParameterIndices,
+        string[5] memory relationships,
+        string[5] memory valueTypes
     ) external returns (uint256) {
         uint256 orderTypeId = nextOrderTypeId++;
 
@@ -57,9 +64,15 @@ contract OrderHouse {
         newOrderType.functionSignature = functionSignature;
         newOrderType.supplierParameterKeys = supplierParameters;
         newOrderType.bidderParameterKeys = bidderParameters;
-        newOrderType.bidParameterIndex = bidParameterIndex;
-        newOrderType.askParameterIndex = askParameterIndex;
-        newOrderType.relationship = relationship;
+
+        for (uint256 i = 0; i < 5; i++) {
+            newOrderType.conditions[i] = Condition(
+                bidParameterIndices[i],
+                askParameterIndices[i],
+                relationships[i],
+                valueTypes[i]
+            );
+        }
 
         emit OrderTypeCreated(orderTypeId, name, functionSignature);
         return orderTypeId;
@@ -87,21 +100,32 @@ contract OrderHouse {
         string memory functionSignature,
         string[5] memory supplierParameters,
         string[5] memory bidderParameters,
-        uint256 bidParameterIndex,
-        uint256 askParameterIndex,
-        string memory relationship
+        uint256[5] memory bidParameterIndices,
+        uint256[5] memory askParameterIndices,
+        string[5] memory relationships,
+        string[5] memory valueTypes
     ) {
         require(orderTypes[orderTypeId].id != 0, "Order type does not exist");
 
         OrderType storage orderType = orderTypes[orderTypeId];
+
+        for (uint256 i = 0; i < 5; i++) {
+            Condition storage condition = orderType.conditions[i];
+            bidParameterIndices[i] = condition.bidParameterIndex;
+            askParameterIndices[i] = condition.askParameterIndex;
+            relationships[i] = condition.relationship;
+            valueTypes[i] = condition.valueType;
+        }
+
         return (
             orderType.name,
             orderType.functionSignature,
             orderType.supplierParameterKeys,
             orderType.bidderParameterKeys,
-            orderType.bidParameterIndex,
-            orderType.askParameterIndex,
-            orderType.relationship
+            bidParameterIndices,
+            askParameterIndices,
+            relationships,
+            valueTypes
         );
     }
 
@@ -121,12 +145,7 @@ contract OrderHouse {
         creator = order.creator;
 
         OrderType storage orderType = orderTypes[order.orderTypeId];
-        if (order.isBid) {
-            parameterKeys = orderType.bidderParameterKeys;
-        } else {
-            parameterKeys = orderType.supplierParameterKeys;
-        }
-
+        parameterKeys = order.isBid ? orderType.bidderParameterKeys : orderType.supplierParameterKeys;
         parameterValues = order.parameterValues;
         status = order.status;
 
@@ -159,17 +178,9 @@ contract OrderHouse {
         newOrder.isBid = isBid;
         newOrder.status = "active";
 
-        if (isBid) {
-            for (uint256 i = 0; i < 5; i++) {
-                if (bytes(orderType.bidderParameterKeys[i]).length > 0) {
-                    require(bytes(parameterValues[i]).length > 0, "Missing bidder parameter value");
-                }
-            }
-        } else {
-            for (uint256 i = 0; i < 5; i++) {
-                if (bytes(orderType.supplierParameterKeys[i]).length > 0) {
-                    require(bytes(parameterValues[i]).length > 0, "Missing supplier parameter value");
-                }
+        for (uint256 i = 0; i < 5; i++) {
+            if (bytes(orderType.supplierParameterKeys[i]).length > 0) {
+                require(bytes(parameterValues[i]).length > 0, isBid ? "Missing bidder parameter value" : "Missing supplier parameter value");
             }
         }
 
@@ -189,22 +200,41 @@ contract OrderHouse {
 
         OrderType storage orderType = orderTypes[bidOrder.orderTypeId];
 
-        // Implement matching logic
-        uint256 bidValue = parseUint(bidOrder.parameterValues[orderType.bidParameterIndex]);
-        uint256 askValue = parseUint(askOrder.parameterValues[orderType.askParameterIndex]);
+        // Evaluate each condition
+        for (uint256 i = 0; i < 5; i++) {
+            Condition storage condition = orderType.conditions[i];
+            if (bytes(condition.relationship).length == 0) {
+                continue; // Skip empty conditions
+            }
 
-        if (keccak256(bytes(orderType.relationship)) == keccak256(bytes(">"))) {
-            require(bidValue > askValue, "Bid value is not greater than ask value");
-        } else if (keccak256(bytes(orderType.relationship)) == keccak256(bytes(">="))) {
-            require(bidValue >= askValue, "Bid value is not greater than or equal to ask value");
-        } else if (keccak256(bytes(orderType.relationship)) == keccak256(bytes("="))) {
-            require(bidValue == askValue, "Bid value is not equal to ask value");
-        } else if (keccak256(bytes(orderType.relationship)) == keccak256(bytes("<="))) {
-            require(bidValue <= askValue, "Bid value is not less than or equal to ask value");
-        } else if (keccak256(bytes(orderType.relationship)) == keccak256(bytes("<"))) {
-            require(bidValue < askValue, "Bid value is not less than ask value");
-        } else {
-            revert("Unknown relationship");
+            if (keccak256(bytes(condition.valueType)) == keccak256(bytes("uint"))) {
+                uint256 bidValue = parseUint(bidOrder.parameterValues[condition.bidParameterIndex]);
+                uint256 askValue = parseUint(askOrder.parameterValues[condition.askParameterIndex]);
+
+                if (keccak256(bytes(condition.relationship)) == keccak256(bytes(">"))) {
+                    require(bidValue > askValue, "Condition not satisfied: bidValue > askValue");
+                } else if (keccak256(bytes(condition.relationship)) == keccak256(bytes(">="))) {
+                    require(bidValue >= askValue, "Condition not satisfied: bidValue >= askValue");
+                } else if (keccak256(bytes(condition.relationship)) == keccak256(bytes("="))) {
+                    require(bidValue == askValue, "Condition not satisfied: bidValue == askValue");
+                } else if (keccak256(bytes(condition.relationship)) == keccak256(bytes("<="))) {
+                    require(bidValue <= askValue, "Condition not satisfied: bidValue <= askValue");
+                } else if (keccak256(bytes(condition.relationship)) == keccak256(bytes("<"))) {
+                    require(bidValue < askValue, "Condition not satisfied: bidValue < askValue");
+                } else {
+                    revert("Unknown relationship");
+                }
+            } else if (keccak256(bytes(condition.valueType)) == keccak256(bytes("string"))) {
+                if (keccak256(bytes(condition.relationship)) == keccak256(bytes("="))) {
+                    require(keccak256(bytes(bidOrder.parameterValues[condition.bidParameterIndex])) == keccak256(bytes(askOrder.parameterValues[condition.askParameterIndex])), "Condition not satisfied: string values do not match");
+                } else if (keccak256(bytes(condition.relationship)) == keccak256(bytes("!="))) {
+                    require(keccak256(bytes(bidOrder.parameterValues[condition.bidParameterIndex])) != keccak256(bytes(askOrder.parameterValues[condition.askParameterIndex])), "Condition not satisfied: string values match when they should not");
+                } else {
+                    revert("Unknown relationship for string");
+                }
+            } else {
+                revert("Unknown value type");
+            }
         }
 
         // Mark orders as matched
@@ -216,7 +246,7 @@ contract OrderHouse {
         return true;
     }
 
-    // Utility function to parse string to uint
+        // Utility function to parse string to uint
     function parseUint(string memory _a) internal pure returns (uint256) {
         bytes memory bresult = bytes(_a);
         uint256 mint = 0;

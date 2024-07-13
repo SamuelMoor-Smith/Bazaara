@@ -1,9 +1,10 @@
-import { CCIP_LOCAL_SIMULATOR_ABI } from "~~/abis/CCIPLocalSimulator";
-import { CCIP_RECEIVER_UNSAFE_ABI } from "~~/abis/CCIPReceiver_Unsafe";
-import { CCIP_SENDER_UNSAFE_ABI } from "~~/abis/CCIPSender_Unsafe";
-import { CROSS_CHAIN_NFT_ABI } from "~~/abis/CrossChainNFT";
-import { CROSS_DESTINATION_MINTER_ABI } from "~~/abis/CrossDestinationMinter";
-import { CROSS_SOURCE_MINTER_ABI } from "~~/abis/CrossSourceMinter";
+import { CCIP_LOCAL_SIMULATOR_ABI } from "~~/contracts/abis/CCIPLocalSimulator";
+import { CCIP_RECEIVER_UNSAFE_ABI } from "~~/contracts/abis/CCIPReceiver_Unsafe";
+import { CCIP_SENDER_UNSAFE_ABI } from "~~/contracts/abis/CCIPSender_Unsafe";
+import { CROSS_CHAIN_NFT_ABI } from "~~/contracts/abis/CrossChainNFT";
+import { CROSS_DESTINATION_MINTER_ABI } from "~~/contracts/abis/CrossDestinationMinter";
+import { CROSS_SOURCE_MINTER_ABI } from "~~/contracts/abis/CrossSourceMinter";
+import { ORDER_HOUSE_ABI } from "~~/contracts/abis/OrderHouse";
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 /**
@@ -42,6 +43,10 @@ const externalContracts = {
     CCIPReceiver_Unsafe: {
       address: "0xd84e040FAE5E20Ddb3ee17Fd05e0CFCa76C78852",
       abi: CCIP_RECEIVER_UNSAFE_ABI as any,
+    },
+    OrderHouse: {
+      address: "0x463079B36CB7ED18A974e11513B167176c4D96d5",
+      abi: ORDER_HOUSE_ABI as any,
     },
   },
 } as const;
