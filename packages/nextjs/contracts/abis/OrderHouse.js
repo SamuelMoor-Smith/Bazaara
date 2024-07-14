@@ -5,6 +5,40 @@ export const ORDER_HOUSE_ABI = [
 		"type": "constructor"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "currentBalance",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "calculatedFees",
+				"type": "uint256"
+			}
+		],
+		"name": "NotEnoughBalance",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "NothingToWithdraw",
+		"type": "error"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "bytes32",
+				"name": "messageId",
+				"type": "bytes32"
+			}
+		],
+		"name": "MessageSent",
+		"type": "event"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -80,6 +114,25 @@ export const ORDER_HOUSE_ABI = [
 		"type": "event"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "destinationChainId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes",
+				"name": "payload",
+				"type": "bytes"
+			}
+		],
+		"name": "TransactionSent",
+		"type": "event"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -140,6 +193,11 @@ export const ORDER_HOUSE_ABI = [
 				"type": "string"
 			},
 			{
+				"internalType": "uint256",
+				"name": "destinationChainId",
+				"type": "uint256"
+			},
+			{
 				"internalType": "string[5]",
 				"name": "supplierParameters",
 				"type": "string[5]"
@@ -150,16 +208,6 @@ export const ORDER_HOUSE_ABI = [
 				"type": "string[5]"
 			},
 			{
-				"internalType": "uint256[5]",
-				"name": "bidParameterIndices",
-				"type": "uint256[5]"
-			},
-			{
-				"internalType": "uint256[5]",
-				"name": "askParameterIndices",
-				"type": "uint256[5]"
-			},
-			{
 				"internalType": "string[5]",
 				"name": "relationships",
 				"type": "string[5]"
@@ -168,6 +216,11 @@ export const ORDER_HOUSE_ABI = [
 				"internalType": "string[5]",
 				"name": "valueTypes",
 				"type": "string[5]"
+			},
+			{
+				"internalType": "uint256[10]",
+				"name": "parametersNeeded",
+				"type": "uint256[10]"
 			}
 		],
 		"name": "createOrderType",
@@ -256,16 +309,6 @@ export const ORDER_HOUSE_ABI = [
 				"type": "string[5]"
 			},
 			{
-				"internalType": "uint256[5]",
-				"name": "bidParameterIndices",
-				"type": "uint256[5]"
-			},
-			{
-				"internalType": "uint256[5]",
-				"name": "askParameterIndices",
-				"type": "uint256[5]"
-			},
-			{
 				"internalType": "string[5]",
 				"name": "relationships",
 				"type": "string[5]"
@@ -290,6 +333,16 @@ export const ORDER_HOUSE_ABI = [
 				"internalType": "uint256",
 				"name": "askOrderId",
 				"type": "uint256"
+			},
+			{
+				"internalType": "uint64",
+				"name": "destinationChainSelector",
+				"type": "uint64"
+			},
+			{
+				"internalType": "address",
+				"name": "destinationReceiver",
+				"type": "address"
 			}
 		],
 		"name": "matchOrders",

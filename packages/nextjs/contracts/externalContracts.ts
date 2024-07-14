@@ -1,10 +1,13 @@
-import { CCIP_LOCAL_SIMULATOR_ABI } from "~~/contracts/abis/CCIPLocalSimulator";
-import { CCIP_RECEIVER_UNSAFE_ABI } from "~~/contracts/abis/CCIPReceiver_Unsafe";
-import { CCIP_SENDER_UNSAFE_ABI } from "~~/contracts/abis/CCIPSender_Unsafe";
+// import { addressResolverAbi } from "viem/_types/constants/abis";
+// import { CCIP_LOCAL_SIMULATOR_ABI } from "~~/contracts/abis/CCIPLocalSimulator";
+// import { CCIP_RECEIVER_UNSAFE_ABI } from "~~/contracts/abis/CCIPReceiver_Unsafe";
+// import { CCIP_SENDER_UNSAFE_ABI } from "~~/contracts/abis/CCIPSender_Unsafe";
 import { CROSS_CHAIN_NFT_ABI } from "~~/contracts/abis/CrossChainNFT";
 import { CROSS_DESTINATION_MINTER_ABI } from "~~/contracts/abis/CrossDestinationMinter";
-import { CROSS_SOURCE_MINTER_ABI } from "~~/contracts/abis/CrossSourceMinter";
 import { ORDER_HOUSE_ABI } from "~~/contracts/abis/OrderHouse";
+// import { CROSS_SOURCE_MINTER_ABI } from "~~/contracts/abis/CrossSourceMinter";
+import { ORDER_RECEIVER_ABI } from "~~/contracts/abis/OrderReceiver";
+import { ORDER_SENDER_ABI } from "~~/contracts/abis/OrderSender";
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 /**
@@ -20,10 +23,6 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
  */
 const externalContracts = {
   11155111: {
-    CCIPLocalSimulator: {
-      address: "0x5B3716F771292fCe9369344C39e37f003c42DbBd",
-      abi: CCIP_LOCAL_SIMULATOR_ABI as any,
-    },
     CrossChainNFT: {
       address: "0x99f166D1b7ac90413832FE16b6c7b2408550e830",
       abi: CROSS_CHAIN_NFT_ABI as any,
@@ -32,21 +31,21 @@ const externalContracts = {
       address: "0xC13801b675235A0B6eE18B33FDeC2E7b4C7eE379",
       abi: CROSS_DESTINATION_MINTER_ABI as any,
     },
-    CrossSourceMinter: {
-      address: "0x36b9D492ED6679FDC48408Ed11a65dC5677E0eF4",
-      abi: CROSS_SOURCE_MINTER_ABI as any,
-    },
-    CCIPSender_Unsafe: {
-      address: "0xdEF7b5Ef6369848bc9Cc89B793C4B2197D4c4855",
-      abi: CCIP_SENDER_UNSAFE_ABI as any,
-    },
-    CCIPReceiver_Unsafe: {
-      address: "0xd84e040FAE5E20Ddb3ee17Fd05e0CFCa76C78852",
-      abi: CCIP_RECEIVER_UNSAFE_ABI as any,
+  },
+  421614: {
+    OrderReceiver: {
+      address: "0x5874B42b84Cd67FE605D4e951e839D5c21ABdf29",
+      abi: ORDER_RECEIVER_ABI as any,
     },
     OrderHouse: {
-      address: "0x463079B36CB7ED18A974e11513B167176c4D96d5",
+      address: "0x9bBA902949FD752BB71Ac16745123D70aFC9a38B",
       abi: ORDER_HOUSE_ABI as any,
+    },
+  },
+  43113: {
+    OrderSender: {
+      address: "0x3D60a720e0C8d45310fc8033dB5Ce7887fc271b3",
+      abi: ORDER_SENDER_ABI as any,
     },
   },
 } as const;

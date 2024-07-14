@@ -34,20 +34,20 @@ contract CrossDestinationMinter is CCIPReceiver {
         emit MintCallSuccessfull();
     }
 
-    function testMint() external {
-        // Mint from Sepolia
-        nft.mintFrom(msg.sender, 0);
-    }
+    // function testMint() external {
+    //     // Mint from Sepolia
+    //     nft.mintFrom(msg.sender, 0);
+    // }
 
-    function testMessage() external {
-        // Mint from Sepolia
-        bytes memory message;
-        message = abi.encodeWithSignature("mintFrom(address,uint256)", msg.sender, 0);
+    // function testMessage() external {
+    //     // Mint from Sepolia
+    //     bytes memory message;
+    //     message = abi.encodeWithSignature("mintFrom(address,uint256)", msg.sender, 0);
 
-        (bool success, ) = address(nft).call(message);
-        require(success);
-        emit MintCallSuccessfull();
-    }
+    //     (bool success, ) = address(nft).call(message);
+    //     require(success);
+    //     emit MintCallSuccessfull();
+    // }
 
     function updateNFT(address nftAddress) external {
         nft = InftMinter(nftAddress);
