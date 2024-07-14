@@ -118,9 +118,9 @@ export const ORDER_HOUSE_ABI = [
 		"inputs": [
 			{
 				"indexed": false,
-				"internalType": "uint256",
+				"internalType": "uint64",
 				"name": "destinationChainId",
-				"type": "uint256"
+				"type": "uint64"
 			},
 			{
 				"indexed": false,
@@ -193,9 +193,14 @@ export const ORDER_HOUSE_ABI = [
 				"type": "string"
 			},
 			{
-				"internalType": "uint256",
+				"internalType": "uint64",
 				"name": "destinationChainId",
-				"type": "uint256"
+				"type": "uint64"
+			},
+			{
+				"internalType": "address",
+				"name": "destinationReceiver",
+				"type": "address"
 			},
 			{
 				"internalType": "string[5]",
@@ -294,6 +299,16 @@ export const ORDER_HOUSE_ABI = [
 				"type": "string"
 			},
 			{
+				"internalType": "uint64",
+				"name": "destinationChainId",
+				"type": "uint64"
+			},
+			{
+				"internalType": "address",
+				"name": "destinationReceiver",
+				"type": "address"
+			},
+			{
 				"internalType": "string",
 				"name": "functionSignature",
 				"type": "string"
@@ -333,16 +348,6 @@ export const ORDER_HOUSE_ABI = [
 				"internalType": "uint256",
 				"name": "askOrderId",
 				"type": "uint256"
-			},
-			{
-				"internalType": "uint64",
-				"name": "destinationChainSelector",
-				"type": "uint64"
-			},
-			{
-				"internalType": "address",
-				"name": "destinationReceiver",
-				"type": "address"
 			}
 		],
 		"name": "matchOrders",

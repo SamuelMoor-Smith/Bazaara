@@ -23,6 +23,7 @@ contract OrderHouse {
     struct OrderType {
         uint256 id;
         uint256 destinationChainId;
+        address destinationReceiver;
         string name;
         string functionSignature;
         string[5] supplierParameterKeys;
@@ -62,6 +63,7 @@ contract OrderHouse {
         string memory name,
         string memory functionSignature,
         uint256 destinationChainId,
+        address destinationReceiver,
         string[5] memory supplierParameters,
         string[5] memory bidderParameters,
         string[5] memory relationships,
@@ -73,6 +75,7 @@ contract OrderHouse {
         OrderType storage newOrderType = orderTypes[orderTypeId];
         newOrderType.id = orderTypeId;
         newOrderType.destinationChainId = destinationChainId;
+        newOrderType.destinationReceiver = destinationReceiver;
         newOrderType.name = name;
         newOrderType.functionSignature = functionSignature;
         newOrderType.supplierParameterKeys = supplierParameters;
@@ -199,7 +202,7 @@ contract OrderHouse {
         return orderId;
     }
 
-    function matchOrders(uint256 bidOrderId, uint256 askOrderId, uint64 destinationChainSelector, address destinationReceiver) external returns (bool) {
+    function matchOrders(uint256 bidOrderId, uint256 askOrderId) external returns (bool) {
         Order storage bidOrder = orders[bidOrderId];
         Order storage askOrder = orders[askOrderId];
 
@@ -253,7 +256,7 @@ contract OrderHouse {
         emit OrdersMatched(bidOrderId, askOrderId);
 
         // Send the transaction to the destination contract
-        sendTransaction(orderType.destinationChainId, orderType.functionSignature, orderType.parametersNeeded, bidOrder.parameterValues, askOrder.parameterValues, orderType.valueTypes, destinationChainSelector, destinationReceiver);
+        sendTransaction(orderType.destinationChainId, orderType.destinationReceiver, orderType.functionSignature, orderType.parametersNeeded, bidOrder.parameterValues, askOrder.parameterValues, orderType.valueTypes);
 
         return true;
     }
@@ -286,13 +289,14 @@ contract OrderHouse {
     // Function to send a transaction to the destination contract
     function sendTransaction(
         uint256 destinationChainId,
+        address destinationReceiver,
         string memory functionSignature,
         uint256[10] memory parametersNeeded,
         string[5] memory bidParameterValues,
         string[5] memory askParameterValues,
-        string[5] memory valueTypes,
-        uint64 destinationChainSelector,
-        address destinationReceiver
+        string[5] memory valueTypes
+        // uint64 destinationChainSelector,
+        // address destinationReceiver
     ) internal {
         // Collect the needed parameters for the function signature
         bytes memory payload = abi.encodeWithSignature(functionSignature);
@@ -324,7 +328,7 @@ contract OrderHouse {
         // Emit the event with the encoded payload
         emit TransactionSent(destinationChainId, payload);
 
-        sendToReceiver(payload, destinationChainSelector, destinationReceiver);
+        sendToReceiver(payload, uint64(destinationChainId), destinationReceiver);
     }
 
     function sendToReceiver(

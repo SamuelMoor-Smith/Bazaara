@@ -23,6 +23,10 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
  */
 const externalContracts = {
   11155111: {
+    OrderSender: {
+      address: "0x0Be5829B093499031Bb4Eee8451B36d008Be3b86",
+      abi: ORDER_SENDER_ABI as any,
+    },
     CrossChainNFT: {
       address: "0x99f166D1b7ac90413832FE16b6c7b2408550e830",
       abi: CROSS_CHAIN_NFT_ABI as any,
@@ -34,17 +38,17 @@ const externalContracts = {
   },
   421614: {
     OrderReceiver: {
-      address: "0x5874B42b84Cd67FE605D4e951e839D5c21ABdf29",
+      address: "0x5A71Fcd71594A3fDb47E8e7d8236576e3C8Caa20",
       abi: ORDER_RECEIVER_ABI as any,
     },
     OrderHouse: {
-      address: "0x9bBA902949FD752BB71Ac16745123D70aFC9a38B",
+      address: "0x847618cFd45394CE38529e06cf7C54d740AF22F4",
       abi: ORDER_HOUSE_ABI as any,
     },
   },
   43113: {
     OrderSender: {
-      address: "0x3D60a720e0C8d45310fc8033dB5Ce7887fc271b3",
+      address: "0x90E221187db1ead78C97a4Af751c2e725421e487",
       abi: ORDER_SENDER_ABI as any,
     },
   },

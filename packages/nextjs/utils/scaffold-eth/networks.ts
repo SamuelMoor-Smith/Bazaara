@@ -101,6 +101,13 @@ export function getBlockExplorerTxLink(chainId: number, txnHash: string) {
   const targetChain = targetChainArr[0] as keyof typeof chains;
   const blockExplorerTxURL = chains[targetChain]?.blockExplorers?.default?.url;
 
+  // Update the chains we are using to blockscout versions
+  if (chainId === chains.sepolia.id) {
+    return `https://eth-sepolia.blockscout.com/tx/${txnHash}`;
+  } else if (chainId === chains.arbitrumSepolia.id) {
+    return `https://eth-sepolia.blockscout.com/tx/${txnHash}`;
+  }
+
   if (!blockExplorerTxURL) {
     return "";
   }
