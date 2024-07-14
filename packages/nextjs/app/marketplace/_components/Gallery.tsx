@@ -5,9 +5,10 @@ import type { NextPage } from "next";
 
 const Gallery: NextPage = () => {
   const products = [
-    { src: "https://via.placeholder.com/150", title: "Acme Slip-On Shoes", price: "$45.00 USD" },
-    { src: "https://via.placeholder.com/150", title: "Acme Circles T-Shirt", price: "$20.00 USD" },
-    { src: "https://via.placeholder.com/150", title: "Acme Drawstring Bag", price: "$12.00 USD" },
+    // { src: "car.png", title: "Toy Car", price: "$45.00 USD" },
+    // { src: "xylo.png", title: "Xylophone", price: "$20.00 USD" },
+    { src: "vase.png", title: "NFT Market", orderType: 1 },
+    { src: "fruit.png", title: "Beneficiary Market", orderType: 2 },
     // Add more products as needed
   ];
 

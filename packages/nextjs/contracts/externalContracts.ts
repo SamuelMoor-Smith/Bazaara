@@ -2,6 +2,7 @@
 // import { CCIP_LOCAL_SIMULATOR_ABI } from "~~/contracts/abis/CCIPLocalSimulator";
 // import { CCIP_RECEIVER_UNSAFE_ABI } from "~~/contracts/abis/CCIPReceiver_Unsafe";
 // import { CCIP_SENDER_UNSAFE_ABI } from "~~/contracts/abis/CCIPSender_Unsafe";
+import { BENEFICIARY_ABI } from "~~/contracts/abis/Beneficiary";
 import { CROSS_CHAIN_NFT_ABI } from "~~/contracts/abis/CrossChainNFT";
 import { CROSS_DESTINATION_MINTER_ABI } from "~~/contracts/abis/CrossDestinationMinter";
 import { ORDER_HOUSE_ABI } from "~~/contracts/abis/OrderHouse";
@@ -35,6 +36,10 @@ const externalContracts = {
       address: "0xC13801b675235A0B6eE18B33FDeC2E7b4C7eE379",
       abi: CROSS_DESTINATION_MINTER_ABI as any,
     },
+    Beneficiary: {
+      address: "0x8Ac62E6bD9b5126f55746F825920f7da8d278e78",
+      abi: BENEFICIARY_ABI as any,
+    },
   },
   421614: {
     OrderReceiver: {
@@ -48,7 +53,13 @@ const externalContracts = {
   },
   43113: {
     OrderSender: {
-      address: "0x90E221187db1ead78C97a4Af751c2e725421e487",
+      address: "0x8978d02e05fB4aDCbD4663cCb88C0E46622ce92a",
+      abi: ORDER_SENDER_ABI as any,
+    },
+  },
+  11155420: {
+    OrderSender: {
+      address: "0xCa9fa14175f4195f76993240b8a3cE1504c0dEcE",
       abi: ORDER_SENDER_ABI as any,
     },
   },

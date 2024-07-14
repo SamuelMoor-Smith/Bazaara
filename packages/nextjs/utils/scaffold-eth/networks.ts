@@ -106,6 +106,8 @@ export function getBlockExplorerTxLink(chainId: number, txnHash: string) {
     return `https://eth-sepolia.blockscout.com/tx/${txnHash}`;
   } else if (chainId === chains.arbitrumSepolia.id) {
     return `https://eth-sepolia.blockscout.com/tx/${txnHash}`;
+  } else if (chainId === chains.optimismSepolia.id) {
+    return `https://optimism-sepolia.blockscout.com/tx/${txnHash}`;
   }
 
   if (!blockExplorerTxURL) {
